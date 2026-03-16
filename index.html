@@ -510,6 +510,30 @@
     .trade-ops .field label { font-size: 0.8rem; color: var(--text-muted); }
     .trade-ops .field input { padding: 10px 12px; border-radius: 6px; border: 1px solid var(--border); background: var(--bg-deep); color: var(--text); font-family: var(--font-mono); font-size: 0.9rem; }
     .trade-ops .info-row { font-size: 0.8rem; color: var(--text-muted); display: flex; justify-content: space-between; }
+    .term-hint-wrap { position: relative; display: inline; }
+    .term-hint { cursor: help; text-decoration: underline; text-underline-offset: 3px; }
+    .term-hint-tooltip {
+      position: absolute; left: 0; bottom: 100%; margin-bottom: 6px;
+      width: 280px; max-width: calc(100vw - 24px); padding: 12px 14px;
+      background: var(--bg-elevated); border: 1px solid var(--border);
+      border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+      font-size: 0.8rem; color: var(--text); line-height: 1.5; text-align: left;
+      opacity: 0; visibility: hidden; transition: opacity 0.2s, visibility 0.2s; z-index: 1000;
+      pointer-events: none;
+    }
+    .term-hint-tooltip::after {
+      content: ''; position: absolute; left: 16px; top: 100%; transform: translateX(0);
+      border: 6px solid transparent; border-top-color: var(--border);
+    }
+    .term-hint-wrap:hover .term-hint-tooltip,
+    .term-hint-wrap.term-hint-open .term-hint-tooltip { opacity: 1; visibility: visible; pointer-events: auto; }
+    .term-hint-text { display: block; margin-bottom: 10px; }
+    .term-hint-more {
+      display: inline-flex; align-items: center; gap: 6px; font-size: 0.8rem; color: var(--accent);
+      text-decoration: none; font-weight: 500;
+    }
+    .term-hint-more:hover { text-decoration: underline; }
+    .term-hint-more img { width: 18px; height: 18px; flex-shrink: 0; object-fit: contain; vertical-align: middle; }
     .trade-ops .btn-long { width: 100%; padding: 12px; border: none; border-radius: var(--radius); background: var(--success); color: var(--bg-deep); font-weight: 600; font-size: 0.95rem; cursor: pointer; }
     .trade-ops .btn-short { width: 100%; padding: 12px; border: none; border-radius: var(--radius); background: var(--danger); color: #fff; font-weight: 600; font-size: 0.95rem; cursor: pointer; }
     .trade-ops .asset-block { margin-top: auto; padding-top: 16px; border-top: 1px solid var(--border); }
@@ -632,6 +656,102 @@
     .ask-ai .suggested { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
     .ask-ai .suggested span { padding: 6px 12px; background: var(--bg-elevated); border-radius: 6px; font-size: 0.85rem; cursor: pointer; color: var(--text-muted); }
     .ask-ai .suggested span:hover { color: var(--accent); }
+    .term-detail-page { padding-bottom: 48px; }
+    .term-detail-page .term-detail-back { margin-bottom: 24px; }
+    .term-detail-page .term-back-link {
+      display: inline-flex; align-items: center; gap: 6px; font-size: 0.875rem; color: var(--accent);
+      text-decoration: none; padding: 8px 14px; border-radius: 8px; border: 1px solid transparent;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .term-detail-page .term-back-link:hover { background: var(--accent-dim); border-color: rgba(34, 211, 197, 0.3); text-decoration: none; }
+    .term-detail-page .hero {
+      margin-bottom: 32px; padding-bottom: 24px; border-bottom: 1px solid var(--border);
+    }
+    .term-detail-page .hero h1 { font-size: 1.6rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 6px; }
+    .term-detail-page .hero .meta {
+      display: inline-block; font-size: 0.75rem; font-weight: 600; color: var(--accent);
+      background: var(--accent-dim); padding: 4px 10px; border-radius: 999px; letter-spacing: 0.03em;
+    }
+    .term-detail-page .term-section {
+      margin-bottom: 28px; padding: 20px 22px; background: var(--bg-card); border: 1px solid var(--border);
+      border-radius: 12px; position: relative; overflow: hidden;
+    }
+    .term-detail-page .term-section::before {
+      content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background: var(--accent); opacity: 0.6; border-radius: 12px 0 0 12px;
+    }
+    .term-detail-page .term-section h3 {
+      font-size: 1rem; font-weight: 600; color: var(--text); margin-bottom: 12px; padding-left: 4px;
+    }
+    .term-detail-page .term-section p { color: var(--text-muted); font-size: 0.95rem; line-height: 1.7; margin: 0 0 0 4px; }
+    .term-detail-page .term-section p + p { margin-top: 10px; }
+    .term-detail-page .term-section ul { padding-left: 22px; margin: 12px 0 0 4px; color: var(--text-muted); font-size: 0.95rem; line-height: 1.7; }
+    .term-detail-page .term-section li { margin-bottom: 10px; }
+    .term-detail-page .term-section li:last-child { margin-bottom: 0; }
+    .term-detail-page .term-section-formula-example .term-formula-block {
+      margin-bottom: 24px; padding: 20px; background: linear-gradient(145deg, var(--bg-deep) 0%, var(--bg-elevated) 100%);
+      border-radius: 10px; border: 1px solid var(--border);
+    }
+    .term-detail-page .term-section-formula-example .term-formula-block h4 {
+      font-size: 0.85rem; font-weight: 600; color: var(--accent); margin-bottom: 12px; letter-spacing: 0.02em;
+    }
+    .term-detail-page .term-formula {
+      padding: 14px 18px; background: var(--bg-card); border-radius: 8px;
+      border-left: 4px solid var(--accent); font-family: var(--font-mono); font-size: 0.875rem;
+    }
+    .term-detail-page .term-formula-item { color: var(--text); line-height: 1.9; }
+    .term-detail-page .term-formula-item + .term-formula-item { margin-top: 8px; }
+    .term-detail-page .term-section-formula-example .term-example-block {
+      padding: 20px; background: var(--bg-elevated); border-radius: 10px; border: 1px solid var(--border);
+    }
+    .term-detail-page .term-section-formula-example .term-example-block h4 {
+      font-size: 0.85rem; font-weight: 600; color: var(--text); margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
+    }
+    .term-detail-page .term-section-formula-example .term-example-block h4::before {
+      content: ''; width: 4px; height: 14px; background: var(--accent); border-radius: 2px;
+    }
+    .term-detail-page .term-section-formula-example .term-example-block p { margin: 0 0 10px; }
+    .term-detail-page .term-section-formula-example .term-example-block p:last-child { margin-bottom: 0; }
+    .term-detail-page .term-example-calc { margin: 8px 0; padding: 14px 16px; background: var(--bg-deep); border-radius: 8px; border: 1px solid var(--border); }
+    .term-detail-page .term-example-row { display: block; margin-bottom: 10px; font-family: var(--font-mono); font-size: 0.9rem; }
+    .term-detail-page .term-example-row:last-child { margin-bottom: 0; }
+    .term-detail-page .term-example-label { color: var(--accent); }
+    .term-detail-page .term-example-expr { color: var(--text-muted); }
+    .term-detail-page .term-example-result { font-weight: 600; color: var(--text); }
+    .term-detail-page .term-faq-list { list-style: none; padding: 0; margin: 0; }
+    .term-detail-page .term-faq-item {
+      border-bottom: 1px solid var(--border); overflow: hidden;
+    }
+    .term-detail-page .term-faq-item:first-child { border-top: 1px solid var(--border); }
+    .term-detail-page .term-faq-q {
+      display: flex; align-items: center; justify-content: space-between; gap: 12px;
+      padding: 14px 0; font-size: 0.9rem; font-weight: 600; color: var(--text); cursor: pointer;
+      transition: color 0.2s, background 0.2s;
+    }
+    .term-detail-page .term-faq-q:hover { color: var(--accent); }
+    .term-detail-page .term-faq-q .term-faq-icon {
+      flex-shrink: 0; width: 18px; height: 18px; color: var(--text-muted);
+      transition: transform 0.25s ease, color 0.2s;
+    }
+    .term-detail-page .term-faq-q .term-faq-icon svg { width: 100%; height: 100%; display: block; }
+    .term-detail-page .term-faq-item.open .term-faq-q .term-faq-icon { transform: rotate(180deg); color: var(--accent); }
+    .term-detail-page .term-faq-a-wrap { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+    .term-detail-page .term-faq-item.open .term-faq-a-wrap { max-height: 320px; }
+    .term-detail-page .term-faq-a { font-size: 0.9rem; color: var(--text-muted); line-height: 1.65; padding: 0 0 14px; padding-left: 0; }
+    .term-detail-page .ask-ai {
+      margin-top: 32px; padding: 24px; background: linear-gradient(135deg, var(--accent-dim) 0%, rgba(34, 211, 197, 0.06) 100%);
+      border: 1px solid rgba(34, 211, 197, 0.25); border-radius: 14px;
+    }
+    .term-detail-page .ask-ai h4 { font-size: 1rem; margin-bottom: 8px; color: var(--accent); display: flex; align-items: center; gap: 8px; }
+    .term-detail-page .ask-ai h4 img { width: 20px; height: 20px; object-fit: contain; }
+    .term-detail-page .ask-ai-desc { font-size: 0.875rem; color: var(--text-muted); margin-bottom: 14px; line-height: 1.5; }
+    .term-detail-page .ask-ai input { border-radius: 8px; padding: 12px 14px; border-color: rgba(34, 211, 197, 0.35); }
+    .term-detail-page .ask-ai .suggested { margin-top: 12px; }
+    .term-detail-page .ask-ai .suggested span {
+      padding: 8px 14px; border-radius: 8px; font-size: 0.85rem; cursor: pointer;
+      background: var(--bg-card); border: 1px solid var(--border); color: var(--text-muted);
+      transition: color 0.2s, border-color 0.2s, background 0.2s;
+    }
+    .term-detail-page .ask-ai .suggested span:hover { color: var(--accent); border-color: var(--accent); background: var(--bg-elevated); }
 
     /* ----- 社区两栏布局 · 参考币安/Bitget 社区 ----- */
     .community-page { padding: 0; }
@@ -2295,7 +2415,7 @@
                 <input type="text" placeholder="0" /><span class="info-row" style="margin-top:4px">BTC</span>
               </div>
               <div class="info-row"><span>保证金</span><span>-/- USDT</span></div>
-              <div class="info-row"><span>预估强平价</span><span>-/-</span></div>
+              <div class="info-row"><span><span class="term-hint-wrap"><span class="term-hint">预估强平价</span><span class="term-hint-tooltip"><span class="term-hint-text">若多仓的标记价格低于此强平价格，或是空仓的标记价格高于此强平价格，您的持仓将被强平。</span><a href="#" class="term-hint-more term-link-liquidation" data-page="page-term-liquidation"><img src="assets/ai-market.png" alt="AI" />了解更多</a></span></span></span><span>-/-</span></div>
               <div class="info-row"><span>可开</span><span>0.305/0.307 BTC</span></div>
               <label style="font-size:0.85rem; color: var(--text-muted); display:flex; align-items:center; gap:8px; cursor:pointer;"><input type="checkbox" /> 止盈止损</label>
               <button type="button" class="btn-long">买入开多</button>
@@ -2311,6 +2431,98 @@
                   <button type="button">买币</button>
                 </div>
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 术语详情：预估强平价 -->
+      <section id="page-term-liquidation" class="page">
+        <div class="content-ai term-detail-page">
+          <div class="term-detail-back">
+            <a href="#" class="term-back-link" data-page="page-trade"><span aria-hidden="true">←</span> 返回交易</a>
+          </div>
+          <div class="hero">
+            <span class="meta">术语说明</span>
+            <h1>预估强平价</h1>
+          </div>
+          <div class="term-section">
+            <h3>简单解释</h3>
+            <p>若多仓的标记价格低于此强平价格，或是空仓的标记价格高于此强平价格，您的持仓将被强平。</p>
+          </div>
+          <div class="term-section">
+            <h3>详细解释与规则说明</h3>
+            <p>预估强平价是根据当前仓位、杠杆与保证金计算出的理论强平价格。当合约的<strong>标记价格</strong>触及该价格时，系统将执行强制平仓，以控制风险。多仓（做多）在价格下跌至强平价时被强平；空仓（做空）在价格上涨至强平价时被强平。实际强平还会受手续费、资金费率等影响，此处为预估值。</p>
+            <ul>
+              <li>强平价随仓位、杠杆、保证金变化而变动，加减仓或调整杠杆后会更新。</li>
+              <li>采用标记价格而非最新成交价判断是否强平，以减少异常波动导致的误强平。</li>
+              <li>强平前通常会先触发减仓或保证金不足提醒，请留意风险与通知。</li>
+            </ul>
+          </div>
+          <div class="term-section term-section-formula-example">
+            <h3>计算公式与示例</h3>
+            <div class="term-formula-block">
+              <h4>计算公式</h4>
+              <p style="margin:0 0 12px 4px">以全仓为例，多仓与空仓的预估强平价可近似表示为：</p>
+              <div class="term-formula">
+                <div class="term-formula-item">多仓强平价 ≈ 开仓均价 × (1 − 1/杠杆) + 维持保证金率影响</div>
+                <div class="term-formula-item">空仓强平价 ≈ 开仓均价 × (1 + 1/杠杆) − 维持保证金率影响</div>
+              </div>
+              <p style="margin:12px 0 0 4px">不同仓位模式（全仓/逐仓）与保证金制度下公式略有差异，界面展示的预估值以当前仓位与平台规则实时计算为准。</p>
+            </div>
+            <div class="term-example-block">
+              <h4>示例</h4>
+              <p style="margin-bottom:14px">设 BTCUSDT <strong>开仓均价 = 70,000 USDT</strong>，<strong>杠杆 = 10x</strong>，忽略维持保证金率等修正，代入公式得：</p>
+              <div class="term-example-calc">
+                <div class="term-example-row">
+                  <span class="term-example-label">多仓强平价</span>
+                  <span class="term-example-expr">= 70,000 × (1 − 1/10) = 70,000 × 0.9</span>
+                  <span class="term-example-result">= 63,000 USDT</span>
+                </div>
+                <div class="term-example-row">
+                  <span class="term-example-label">空仓强平价</span>
+                  <span class="term-example-expr">= 70,000 × (1 + 1/10) = 70,000 × 1.1</span>
+                  <span class="term-example-result">= 77,000 USDT</span>
+                </div>
+              </div>
+              <p style="margin-top:14px">即：多仓时标记价格跌至约 <strong>63,000 USDT</strong> 可能触发强平；空仓时标记价格涨至约 <strong>77,000 USDT</strong> 可能触发强平。实际强平价会受维持保证金率、手续费等影响，请以交易页「预估强平价」为准。</p>
+            </div>
+          </div>
+          <div class="term-section">
+            <h3>常见问题</h3>
+            <ul class="term-faq-list">
+              <li class="term-faq-item open">
+                <div class="term-faq-q">为什么我的强平价和别人不一样？<span class="term-faq-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span></div>
+                <div class="term-faq-a-wrap"><div class="term-faq-a">强平价与您的开仓价格、杠杆、保证金有关，不同仓位会得到不同预估值。</div></div>
+              </li>
+              <li class="term-faq-item">
+                <div class="term-faq-q">加保证金能改变强平价吗？<span class="term-faq-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span></div>
+                <div class="term-faq-a-wrap"><div class="term-faq-a">增加保证金可降低被强平的概率，强平价会向更有利于您的方向移动。</div></div>
+              </li>
+              <li class="term-faq-item">
+                <div class="term-faq-q">强平后还会欠款吗？<span class="term-faq-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span></div>
+                <div class="term-faq-a-wrap"><div class="term-faq-a">根据平台规则，部分模式下强平后可能产生穿仓损失，请以平台公告为准。</div></div>
+              </li>
+              <li class="term-faq-item">
+                <div class="term-faq-q">标记价格和最新成交价有什么区别？<span class="term-faq-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span></div>
+                <div class="term-faq-a-wrap"><div class="term-faq-a">强平判断使用标记价格，可减少因短期剧烈波动或插针导致的误强平。标记价格通常由指数价格与资金费率基差等综合得出，与最新成交价可能略有差异。</div></div>
+              </li>
+              <li class="term-faq-item">
+                <div class="term-faq-q">如何降低被强平的风险？<span class="term-faq-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span></div>
+                <div class="term-faq-a-wrap"><div class="term-faq-a">可采取：适当降低杠杆、及时追加保证金、设置止损或止盈、关注强平价与当前价的距离，避免在波动剧烈时满仓高杠杆。</div></div>
+              </li>
+              <li class="term-faq-item">
+                <div class="term-faq-q">强平价会实时变动吗？<span class="term-faq-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></span></div>
+                <div class="term-faq-a-wrap"><div class="term-faq-a">会。加减仓、调整杠杆、追加或减少保证金、以及资金费率结算等都会影响强平价，交易页的「预估强平价」会随这些因素更新。</div></div>
+              </li>
+            </ul>
+          </div>
+          <div class="ask-ai">
+            <h4><img src="assets/ai-market.png" alt="" /> 更多问题问 AI</h4>
+            <p class="ask-ai-desc">可向 AI Agent 提问，例如：「如何降低强平风险」「标记价格和最新价有什么区别」</p>
+            <input type="text" placeholder="输入您的问题……" class="term-ai-input" />
+            <div class="suggested">
+              <span>如何降低强平风险</span><span>标记价格和最新价区别</span><span>保证金率怎么算</span>
             </div>
           </div>
         </div>
@@ -3131,11 +3343,13 @@
     }
 
     function getNavPageFor(pageId) {
+      if (pageId === 'page-term-liquidation') return 'page-trade';
       if (['page-assistant','page-assistant-history','page-skills','page-scheduled-tasks','page-connections','page-ai-trade-kit','page-quote','page-trade','page-market','page-activity','page-community'].includes(pageId)) return pageId;
       return null;
     }
     function getPrimaryPage(pageId) {
       if (['page-assistant','page-assistant-history','page-skills','page-scheduled-tasks','page-connections'].includes(pageId)) return 'page-assistant';
+      if (pageId === 'page-term-liquidation') return 'page-trade';
       return pageId;
     }
 
@@ -3196,6 +3410,41 @@
         const pageId = this.getAttribute('data-page');
         if (!pageId) return;
         switchPage(pageId);
+      });
+    });
+
+    document.querySelectorAll('a.term-link-liquidation, a.term-back-link').forEach(function(a) {
+      a.addEventListener('click', function(e) {
+        e.preventDefault();
+        var pageId = this.getAttribute('data-page');
+        if (pageId) switchPage(pageId);
+      });
+    });
+
+    (function() {
+      var closeTimer;
+      document.querySelectorAll('.term-hint-wrap').forEach(function(wrap) {
+        var tooltip = wrap.querySelector('.term-hint-tooltip');
+        function open() { clearTimeout(closeTimer); wrap.classList.add('term-hint-open'); }
+        function scheduleClose() { closeTimer = setTimeout(function() { wrap.classList.remove('term-hint-open'); }, 300); }
+        wrap.addEventListener('mouseenter', open);
+        wrap.addEventListener('mouseleave', scheduleClose);
+        if (tooltip) {
+          tooltip.addEventListener('mouseenter', open);
+          tooltip.addEventListener('mouseleave', scheduleClose);
+        }
+      });
+    })();
+
+    document.querySelectorAll('.term-faq-list').forEach(function(list) {
+      list.addEventListener('click', function(e) {
+        var q = e.target.closest('.term-faq-q');
+        if (!q) return;
+        var item = q.closest('.term-faq-item');
+        if (!item) return;
+        var wasOpen = item.classList.contains('open');
+        list.querySelectorAll('.term-faq-item').forEach(function(el) { el.classList.remove('open'); });
+        if (!wasOpen) item.classList.add('open');
       });
     });
 
